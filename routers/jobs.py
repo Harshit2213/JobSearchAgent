@@ -5,8 +5,9 @@ from pydantic import BaseModel, Field
 
 from agents.job_discovery import JobDiscoveryAgent
 from agents.job_matching import JobMatchingAgent
+from agents.research import ResearchAgent
 from agents.tailoring import TailoringAgent
-from models.job import JobListing, MatchedJob, TailoredApplication
+from models.job import CompanyResearch, JobListing, MatchedJob, TailoredApplication
 from models.resume import ParsedResume
 from utils.limiter import limiter
 
@@ -29,6 +30,10 @@ class TailorRequest(BaseModel):
     profile: ParsedResume
 
 
+class ResearchRequest(BaseModel):
+    job: JobListing
+
+
 @router.post("/search-jobs", response_model=SearchResponse)
 @limiter.limit("10/minute")
 async def search_jobs(request: Request, body: SearchRequest):
@@ -45,3 +50,9 @@ async def search_jobs(request: Request, body: SearchRequest):
 @limiter.limit("10/minute")
 async def tailor_job(request: Request, body: TailorRequest):
     return await TailoringAgent().tailor(body.profile, body.job)
+
+
+@router.post("/jobs/research", response_model=CompanyResearch)
+@limiter.limit("10/minute")
+async def research_job(request: Request, body: ResearchRequest):
+    return await ResearchAgent().research(body.job)
