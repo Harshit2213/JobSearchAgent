@@ -12,6 +12,9 @@ def _map_error(exc: anthropic.APIError) -> HTTPException:
     if isinstance(exc, anthropic.APIConnectionError):
         return HTTPException(503, "Could not reach the Claude API. Check your network.")
     if isinstance(exc, anthropic.BadRequestError):
+        if "credit balance" in str(exc).lower():
+            # Treat out-of-credits as 402 so the circuit breaker trips and Groq takes over.
+            return HTTPException(402, "Anthropic credit balance too low — falling back to Groq.")
         return HTTPException(400, f"Claude rejected the request: {exc.message}")
     return HTTPException(502, f"Claude API error ({exc.status_code}).")
 

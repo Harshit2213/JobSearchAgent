@@ -8,7 +8,7 @@ from utils.config import settings
 logger = logging.getLogger(__name__)
 
 # HTTP status codes that indicate Anthropic is unavailable and should trip the circuit.
-_TRIP_CODES = {401, 429, 503, 502}
+_TRIP_CODES = {401, 402, 429, 503, 502}
 
 
 class BackendRouter:
