@@ -3,14 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
 
 from db.database import init_db
 from routers import applications, interview, jobs, resume
-
-limiter = Limiter(key_func=get_remote_address)
+from utils.limiter import limiter
 
 app = FastAPI(
     title="Job Search Agent",

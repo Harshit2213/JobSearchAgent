@@ -12,8 +12,8 @@ _ALLOWED_MIMES = {
 _MAX_FILENAME_LEN = 128
 
 
-async def validate_upload(file: UploadFile, max_bytes: int) -> bytes:
-    """Read, size-check, MIME-check, and return file bytes. Raises HTTPException on violation."""
+async def validate_upload(file: UploadFile, max_bytes: int) -> tuple[bytes, str]:
+    """Read, size-check, MIME-check, and return (bytes, mime_type). Raises HTTPException on violation."""
     content = await file.read()
 
     if len(content) > max_bytes:
@@ -29,7 +29,7 @@ async def validate_upload(file: UploadFile, max_bytes: int) -> bytes:
             detail="Only PDF and DOCX files are accepted.",
         )
 
-    return content
+    return content, kind.mime
 
 
 def safe_filename(name: str) -> str:
