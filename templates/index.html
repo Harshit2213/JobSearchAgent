@@ -7,40 +7,98 @@
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
-  <header>
-    <h1>Job Search Agent</h1>
-    <p class="subtitle">AI-powered job discovery, matching, and application tracking</p>
-  </header>
 
-  <main>
-    <!-- Phase 1: Upload -->
-    <section id="upload-section" class="card">
-      <h2>1. Upload Your Resume</h2>
-      <form id="upload-form" enctype="multipart/form-data">
-        <label for="resume-file">Resume (PDF or DOCX, max 5 MB)</label>
-        <input type="file" id="resume-file" name="file" accept=".pdf,.docx" required />
+<header>
+  <h1>Job Search Agent</h1>
+  <p class="subtitle">Multi-agent AI system for job discovery, matching &amp; application prep</p>
+</header>
 
-        <label for="job-title">Job Title <span class="optional">(optional)</span></label>
-        <input type="text" id="job-title" name="job_title" maxlength="100"
-               placeholder="e.g. Senior Software Engineer" />
+<main>
 
-        <button type="submit">Analyse Resume</button>
-      </form>
-      <div id="upload-result" class="result hidden"></div>
-    </section>
+  <!-- ── Upload ──────────────────────────────────────────────────────── -->
+  <section id="upload-section" class="card">
+    <h2>1. Upload Your Resume</h2>
+    <form id="upload-form" enctype="multipart/form-data">
+      <label for="resume-file">Resume <span class="dim">(PDF or DOCX, max 5 MB)</span></label>
+      <input type="file" id="resume-file" name="file" accept=".pdf,.docx" required />
 
-    <!-- Phases 3–6: populated by JS after upload -->
-    <section id="jobs-section" class="card hidden">
-      <h2>2. Matched Jobs</h2>
-      <div id="jobs-list"></div>
-    </section>
+      <label for="job-title-input">Job Title <span class="dim">(optional — we'll infer it if blank)</span></label>
+      <input type="text" id="job-title-input" name="job_title" maxlength="100"
+             placeholder="e.g. Senior Software Engineer" />
 
-    <section id="tracker-section" class="card hidden">
-      <h2>3. Application Tracker</h2>
-      <div id="tracker-list"></div>
-    </section>
-  </main>
+      <button type="submit" id="upload-btn">Analyse Resume</button>
+    </form>
+    <div id="upload-status" class="status-msg hidden"></div>
+  </section>
 
-  <script src="/static/js/app.js"></script>
+  <!-- ── Inferred Roles ──────────────────────────────────────────────── -->
+  <section id="roles-section" class="card hidden">
+    <h2>2. Select a Target Role</h2>
+    <p class="dim">We inferred these roles from your resume. Pick one to search.</p>
+    <div id="roles-list"></div>
+  </section>
+
+  <!-- ── Jobs ───────────────────────────────────────────────────────── -->
+  <section id="jobs-section" class="card hidden">
+    <div class="section-header">
+      <h2 id="jobs-heading">3. Matched Jobs</h2>
+      <span id="jobs-count" class="count-badge"></span>
+    </div>
+    <div id="jobs-status" class="status-msg hidden"></div>
+    <div id="jobs-grid"></div>
+  </section>
+
+  <!-- ── Tracker ────────────────────────────────────────────────────── -->
+  <section id="tracker-section" class="card">
+    <div class="section-header">
+      <h2>Application Tracker</h2>
+      <button id="refresh-tracker-btn" class="btn-ghost">↻ Refresh</button>
+    </div>
+    <div id="tracker-empty" class="empty-state">No saved applications yet.</div>
+    <table id="tracker-table" class="hidden">
+      <thead>
+        <tr>
+          <th>Job Title</th><th>Company</th><th>Source</th>
+          <th>Status</th><th>Saved</th>
+        </tr>
+      </thead>
+      <tbody id="tracker-body"></tbody>
+    </table>
+  </section>
+
+</main>
+
+<!-- ── Job Detail Panel ───────────────────────────────────────────────── -->
+<div id="panel-overlay" class="hidden" role="dialog" aria-modal="true">
+  <div id="job-panel">
+    <div id="panel-header">
+      <div>
+        <div id="panel-title" class="panel-job-title"></div>
+        <div id="panel-meta" class="panel-job-meta"></div>
+      </div>
+      <div class="panel-header-actions">
+        <span id="panel-score-badge" class="score-badge"></span>
+        <button id="panel-save-btn" class="btn-save">Save to Tracker</button>
+        <button id="panel-close-btn" class="btn-close" aria-label="Close">✕</button>
+      </div>
+    </div>
+
+    <nav id="panel-tabs">
+      <button class="tab-btn active" data-tab="summary">Summary</button>
+      <button class="tab-btn" data-tab="tailor">Tailor</button>
+      <button class="tab-btn" data-tab="research">Research</button>
+      <button class="tab-btn" data-tab="interview">Interview Prep</button>
+    </nav>
+
+    <div id="panel-content">
+      <div id="tab-summary" class="tab-pane"></div>
+      <div id="tab-tailor"  class="tab-pane hidden"></div>
+      <div id="tab-research" class="tab-pane hidden"></div>
+      <div id="tab-interview" class="tab-pane hidden"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/app.js"></script>
 </body>
 </html>
