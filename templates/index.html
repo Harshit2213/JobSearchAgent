@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Search Agent</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Job Search Agent</h1>
+    <p class="subtitle">AI-powered job discovery, matching, and application tracking</p>
+  </header>
+
+  <main>
+    <!-- Phase 1: Upload -->
+    <section id="upload-section" class="card">
+      <h2>1. Upload Your Resume</h2>
+      <form id="upload-form" enctype="multipart/form-data">
+        <label for="resume-file">Resume (PDF or DOCX, max 5 MB)</label>
+        <input type="file" id="resume-file" name="file" accept=".pdf,.docx" required />
+
+        <label for="job-title">Job Title <span class="optional">(optional)</span></label>
+        <input type="text" id="job-title" name="job_title" maxlength="100"
+               placeholder="e.g. Senior Software Engineer" />
+
+        <button type="submit">Analyse Resume</button>
+      </form>
+      <div id="upload-result" class="result hidden"></div>
+    </section>
+
+    <!-- Phases 3–6: populated by JS after upload -->
+    <section id="jobs-section" class="card hidden">
+      <h2>2. Matched Jobs</h2>
+      <div id="jobs-list"></div>
+    </section>
+
+    <section id="tracker-section" class="card hidden">
+      <h2>3. Application Tracker</h2>
+      <div id="tracker-list"></div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
