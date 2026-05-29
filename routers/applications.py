@@ -1,10 +1,22 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from db.database import get_db, list_applications, update_application
-from models.application import ApplicationOut, ApplicationUpdate
+from db.database import create_application, get_db, list_applications, update_application
+from models.application import ApplicationCreate, ApplicationOut, ApplicationUpdate
 
 router = APIRouter(prefix="/api", tags=["applications"])
+
+
+@router.post("/applications", response_model=ApplicationOut, status_code=201)
+def save_application(body: ApplicationCreate, db: Session = Depends(get_db)):
+    row = create_application(
+        db,
+        job_title=body.job_title,
+        company=body.company,
+        job_url=body.job_url,
+        source=body.source,
+    )
+    return row
 
 
 @router.get("/applications", response_model=list[ApplicationOut])

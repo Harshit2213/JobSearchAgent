@@ -1,3 +1,4 @@
+import asyncio
 import html
 
 from fastapi import APIRouter, File, Form, Request, UploadFile
@@ -33,11 +34,13 @@ async def upload_resume(
     if job_title:
         clean_title = html.escape(job_title.strip())[:100] or None
 
-    profile = ResumeParserAgent().parse(content, mime)
+    parser = ResumeParserAgent()
+    profile = await asyncio.to_thread(parser.parse, content, mime)
 
     inferred: list[str] = []
     if not clean_title:
-        inferred = RoleInferenceAgent().infer(profile)
+        inferrer = RoleInferenceAgent()
+        inferred = await asyncio.to_thread(inferrer.infer, profile)
 
     return UploadResponse(
         profile=profile.model_dump(exclude={"raw_text"}),
