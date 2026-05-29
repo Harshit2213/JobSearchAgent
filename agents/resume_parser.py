@@ -61,6 +61,7 @@ _SYSTEM = (
 
 
 class ResumeParserAgent(BaseAgent):
+    _quality = "high"
     def parse(self, content: bytes, mime: str) -> ParsedResume:
         raw_text = self._extract_text(content, mime)
         if not raw_text.strip():

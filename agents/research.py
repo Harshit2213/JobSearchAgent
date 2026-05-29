@@ -38,6 +38,7 @@ _SYSTEM = (
 
 
 class ResearchAgent(BaseAgent):
+    _quality = "fast"
     async def research(self, job: JobListing) -> CompanyResearch:
         content = (
             f"Company: {job.company}\n"

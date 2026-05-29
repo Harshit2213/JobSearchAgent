@@ -37,6 +37,7 @@ _TAILOR_TOOL = {
 
 
 class TailoringAgent(BaseAgent):
+    _quality = "high"
     def _build_system(self, profile: ParsedResume) -> str:
         return (
             "You are an expert career coach who tailors job applications.\n\n"

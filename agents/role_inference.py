@@ -26,6 +26,7 @@ _SYSTEM = (
 
 
 class RoleInferenceAgent(BaseAgent):
+    _quality = "fast"
     def infer(self, profile: ParsedResume) -> list[str]:
         profile_text = "\n".join([
             f"Past titles: {', '.join(profile.past_titles) or 'N/A'}",

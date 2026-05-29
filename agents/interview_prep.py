@@ -46,6 +46,7 @@ _SYSTEM = (
 
 
 class InterviewPrepAgent(BaseAgent):
+    _quality = "fast"
     def _build_system(self, profile: ParsedResume) -> str:
         return _SYSTEM.format(
             profile=profile.model_dump_json(indent=2, exclude={"raw_text"})

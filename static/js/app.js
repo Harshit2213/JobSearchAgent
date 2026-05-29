@@ -10,29 +10,35 @@ const state = {
 };
 
 // ─── API helpers ──────────────────────────────────────────────────────────────
+async function parseResponse(res) {
+  const ct = res.headers.get('content-type') ?? '';
+  if (ct.includes('application/json')) {
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail ?? `Server error ${res.status}`);
+    return data;
+  }
+  // Non-JSON body (unexpected plain-text 500, etc.)
+  const text = await res.text();
+  throw new Error(res.ok ? 'Unexpected non-JSON response' : `Server error ${res.status}: ${text.slice(0, 120)}`);
+}
+
 async function postJSON(url, body) {
   const res = await fetch(url, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify(body),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.detail ?? `HTTP ${res.status}`);
-  return data;
+  return parseResponse(res);
 }
 
 async function postForm(url, formData) {
   const res = await fetch(url, { method: 'POST', body: formData });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.detail ?? `HTTP ${res.status}`);
-  return data;
+  return parseResponse(res);
 }
 
 async function getJSON(url) {
   const res = await fetch(url);
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.detail ?? `HTTP ${res.status}`);
-  return data;
+  return parseResponse(res);
 }
 
 // ─── UI helpers ───────────────────────────────────────────────────────────────

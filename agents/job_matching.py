@@ -48,7 +48,8 @@ Score 0-100:
 
 
 class JobMatchingAgent(BaseAgent):
-    _CONCURRENCY = 5  # max simultaneous Claude calls
+    _quality = "fast"
+    _CONCURRENCY = 20  # Groq is ~5x faster; higher concurrency is safe
 
     def _build_system(self, profile: ParsedResume) -> str:
         return (
