@@ -1,6 +1,12 @@
 # Environment — NEVER commit this
 .env
 
+# Runtime logs
+uvicorn.log
+uvicorn.err
+*.log
+*.err
+
 # Database
 data/
 
